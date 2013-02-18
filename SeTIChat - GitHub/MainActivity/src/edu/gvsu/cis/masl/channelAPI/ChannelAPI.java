@@ -400,13 +400,35 @@ public class ChannelAPI {
 
                 if (entries.get(0).getStringValue().equalsIgnoreCase("ae")) {
                     String msgValue = entries.get(1).getStringValue();
-                    this.channelListener.onMessage(msgValue);
+                    this.channelListener.onMessage(unescape(msgValue));
                 }
             }
         } catch (InvalidMessageException e) {
             e.printStackTrace();
         }
     }
+    
+    String unescape(String s) {
+		s = s.replace("u0", "\\u0");
+	    int i=0, len=s.length();
+	    char c;
+	    StringBuffer sb = new StringBuffer(len);
+	    while (i < len) {
+	        c = s.charAt(i++);
+	        if (c == '\\') {
+	            if (i < len) {
+	                c = s.charAt(i++);
+	                if (c == 'u') {
+	                    // TODO: check that 4 more chars exist and are all hex digits
+	                    c = (char) Integer.parseInt(s.substring(i, i+4), 16);
+	                    i += 4;
+	                } // add other cases here as desired...
+	            }
+	        } // fall through: \ escapes itself, quotes any character but u
+	        sb.append(c);
+	    }
+	    return sb.toString();
+	}
 
     /**
      * Helper class for parsing talk messages. Again, this protocol has been reverse-engineered
@@ -751,7 +773,7 @@ public class ChannelAPI {
         if (xhr.isSuccess()) {
             String data = StringUtils.chomp(xhr.getResponseText());
             if (!StringUtils.isEmpty(data)) {
-                this.channelListener.onMessage(data);
+                this.channelListener.onMessage(unescape(data));
             }
             poll();
         } else {
