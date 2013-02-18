@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -96,6 +97,15 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
+	
+	@Override
+	public void onBackPressed(){
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	}
+	
+	
+	
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
@@ -197,8 +207,13 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			
 			// TODO: attempt authentication against a network service.
-
+			// TODO: Generate sign up message
+			// TODO: Send and receive response
+			// TODO: Treat response and save data accordingly
+			
+			
 			try {
 				// Simulate network access.
 				Thread.sleep(2000);
