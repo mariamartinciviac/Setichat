@@ -164,13 +164,17 @@ public class SeTIChatService extends Service implements ChannelService {
 		@Override
 		public void onMessage(String message) {
 			Log.i("onMessage", "Message received :"+message);
-			// TODO Auto-generated method stub
+			// Extract message type (server or user) to decide handler
+			//ChatMessage m = XMLParser.XMLtoMessage(message);
+			
 			String intentKey = "es.uc3m.SeTIChat.CHAT_MESSAGE";
+			
 			Intent openIntent = new Intent(intentKey);
-			openIntent.putExtra("message", message);
 			openIntent.setPackage("es.uc3m.setichat");
+			openIntent.putExtra("message", message);
+			
 			Context context = getApplicationContext();
-			context.sendBroadcast(openIntent);  
+			context.sendBroadcast(openIntent); 
 			
 		}
 

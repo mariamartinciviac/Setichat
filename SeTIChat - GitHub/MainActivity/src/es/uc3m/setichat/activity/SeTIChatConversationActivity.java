@@ -6,9 +6,11 @@ import es.uc3m.setichat.service.SeTIChatService;
 import es.uc3m.setichat.service.SeTIChatServiceBinder;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -44,7 +46,7 @@ public class SeTIChatConversationActivity extends Activity {
 	private boolean DEBUG = false;
 
 	private SeTIChatService mService;
-	
+	private BroadcastReceiver chatMessageReceiver;//delete?
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -92,6 +94,21 @@ public class SeTIChatConversationActivity extends Activity {
 		} else {
 			render();
 		}
+		
+		chatMessageReceiver = new BroadcastReceiver() {
+		    @Override
+		    public void onReceive(Context context, Intent intent) {
+				// Append message contained in the Intent to message list
+		    	String m = intent.getStringExtra("message");
+				text.append(m+"\n");
+		    }
+		  };
+			  
+		IntentFilter chatMessageFilter = new IntentFilter();
+		chatMessageFilter.addAction("es.uc3m.SeTIChat.CHAT_MESSAGE");
+		// Add Phone number as category to filter messages (taken from ContactList View)
+		chatMessageFilter.addCategory("chat");
+		registerReceiver(chatMessageReceiver, chatMessageFilter);
 		
 		
 	}
@@ -179,7 +196,7 @@ public class SeTIChatConversationActivity extends Activity {
 
 		
 		// Setting the conversations
-		text.setText("****This is a very easy way to add text into a Text View. This has been done programatically, but could've been done using layouts."); // TODO Use a more fancy layout
+		//text.setText("****This is a very easy way to add text into a Text View. This has been done programatically, but could've been done using layouts."); // TODO Use a more fancy layout
 
 		// Sending messages
 		send.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +209,7 @@ public class SeTIChatConversationActivity extends Activity {
 							"conversationView:OnClickListener: User clicked on sent button");
 
 				Time time = new Time(System.currentTimeMillis());
+				//missing: convert message to XML format
 				mService.sendMessage(edit.getText().toString());
 				// Refresh textview
 				text.setText(text.getText() + edit.getText().toString() + " at " + time + "\n");
