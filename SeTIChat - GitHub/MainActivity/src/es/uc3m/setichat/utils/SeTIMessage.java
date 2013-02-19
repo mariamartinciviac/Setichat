@@ -323,11 +323,16 @@ public class SeTIMessage {
 		}
 		
 		content += "</content>\n";
+		String signature=null;
 		
+		if(this.signed==true)
 		//  Signature
-		String signature = "<signature>\n";
-		//signature+= (String) ((this.signed) ? Base64.encodeToString(this.signature, false) : this.signature);
-		signature+= "\n</signature>";
+		{
+			signature = "<signature>\n";
+			//signature+= (String) ((this.signed) ? Base64.encodeToString(this.signature, false) : this.signature);
+			signature+= "\n</signature>";
+		}
+		
 		
 		xml+= header + content + signature;
 		xml+="\n</message>";
