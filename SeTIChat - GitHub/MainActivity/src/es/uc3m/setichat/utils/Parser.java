@@ -12,13 +12,25 @@ import android.util.Xml;
 
 public class Parser {
 	
-	final URL feedUrl;
+	private URL feedUrl;
+	private InputStream is;
+	private String type;
 
-    public Parser(String feedUrl) {
+    public Parser(String feedUrl, InputStream is,String type) {
     	
     	try {
-    		
-            this.feedUrl = new URL(feedUrl);
+    		if(type.equals("local"))
+    		{
+    			this.is=is;
+    			this.type=type;
+    			this.feedUrl=null;
+    		}
+    		else if(type.equals("url"))
+    		{
+                this.feedUrl = new URL(feedUrl);
+                this.type=type;
+                this.is=null;
+    		}
             
         } catch (MalformedURLException e) {
         	
@@ -28,13 +40,20 @@ public class Parser {
         
     }
 
-    public ArrayList<Object> parse() {
+    public SeTIMessage parse() {
     	
         ParserHandler handler = new ParserHandler();
         
         try {
-        	
-            Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, handler);
+        	if(this.type.equals("url"))
+        	{
+        		Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, handler);
+        	}
+        	else if(this.type.equals("local"))
+        	{
+        		Xml.parse(this.is, Xml.Encoding.UTF_8, handler);
+        	}
+            
             
         } catch (Exception e) {
         	
@@ -42,8 +61,7 @@ public class Parser {
             
         }
         
-        return handler.getList();
-        
+        return handler.getMessage(); 
     }
     
     protected InputStream getInputStream() {

@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/commons-lang-2.6.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="C:/Users/Isa/Downloads/jaxp-api-1.4.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

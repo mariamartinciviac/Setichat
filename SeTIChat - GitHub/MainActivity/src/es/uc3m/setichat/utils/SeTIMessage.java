@@ -9,10 +9,10 @@ public class SeTIMessage {
 	}
 	
 	public SeTIMessage(String idSource, String idDestination, byte[] idMessage,
-			boolean encrypted, boolean signed, byte type, String nick,
+			boolean encrypted, boolean signed, int type, String nick,
 			String mobile, String[] mobileList, String[][] contactList,
 			String chatMessage, byte responseCode, String responseMessage,
-			String revokedMobile, String key, boolean keyType, byte[] signature) {
+			String revokedMobile, String key, String keyType, byte[] signature) {
 		super();
 		this.idSource = idSource;
 		this.idDestination = idDestination;
@@ -39,7 +39,7 @@ public class SeTIMessage {
 		private byte[] idMessage;
 		private boolean encrypted;
 		private boolean signed;
-		private byte type;
+		private int type;
 		
 		// Content - Mandatory
 		
@@ -69,7 +69,7 @@ public class SeTIMessage {
 		private String key;
 		
 		// 9: Upload
-		private boolean keyType;
+		private String keyType;
 		
 		// 10: Key Request
 		
@@ -117,11 +117,11 @@ public class SeTIMessage {
 		this.signed = signed;
 	}
 
-	public byte getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(byte type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 
@@ -197,11 +197,11 @@ public class SeTIMessage {
 		this.key = key;
 	}
 
-	public boolean isKeyType() {
+	public String getKeyType() {
 		return keyType;
 	}
 
-	public void setKeyType(boolean keyType) {
+	public void setKeyType(String keyType) {
 		this.keyType = keyType;
 	}
 
@@ -296,27 +296,13 @@ public class SeTIMessage {
 			case 9: // Upload
 				content+= "<upload>\n";
 				content+= "<key>"+this.key+"</key>";
-				
-				String keyU=null;
-				if(this.keyType==true)
-					keyU="public";
-				else
-					keyU="private";
-				
-				content+="<type>"+key+"</type>\n";
+				content+="<type>"+this.keyType+"</type>\n";
 				content+= "</upload>\n";
 				break;
 				
 			case 10: // Key Request
-				content+= "<keyrequest>\n";
-				
-				String keyR=null;
-				if(this.keyType==true)
-					keyR="public";
-				else
-					keyR="private";
-				
-				content+="<type>"+keyR+"</type>\n";
+				content+= "<keyrequest>\n";				
+				content+="<type>"+this.keyType+"</type>\n";
 				content+="<mobile>"+this.mobile+"</mobile>\n";
 				content+= "</keyrequest>\n";
 				break;
